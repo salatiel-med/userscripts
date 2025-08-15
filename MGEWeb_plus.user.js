@@ -14,17 +14,20 @@
   "use strict";
 
   loopDetectFilterModal();
+  waitForElm("mge-player-video video").then((elem) => {
+    betterVideoPlayer();
+  });
   function loopDetectFilterModal() {
     waitForElm("modal-container tab[heading=Filtros]").then((elem) => {
       betterFilter();
       waitForElmRemoved("modal-container").then((elem) => {
         loopDetectFilterModal();
+        if (!document.querySelector("mge-player-video")) {
+          waitForElm("mge-player-video video").then((elem) => {
+            betterVideoPlayer();
+          });
+        }
       });
-      if (!document.querySelector("mge-player-video")) {
-        waitForElm("mge-player-video video").then((elem) => {
-          betterVideoPlayer();
-        });
-      }
     });
   }
 
