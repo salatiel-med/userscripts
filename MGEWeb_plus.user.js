@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MGEWeb+
 // @namespace    https://mgeweb.medgrupo.com.br/
-// @version      0.0.2
+// @version      0.0.3
 // @description  Melhorias para o MGEWeb
 // @author       Salatiel
 // @match        https://mgeweb.medgrupo.com.br/*
