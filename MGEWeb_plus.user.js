@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MGEWeb+
 // @namespace    https://mgeweb.medgrupo.com.br/
-// @version      0.0.3
+// @version      1.0.4
 // @description  Melhorias para o MGEWeb
 // @author       Salatiel
 // @match        https://mgeweb.medgrupo.com.br/*
@@ -13,20 +13,44 @@
 (function () {
   "use strict";
 
+  document.querySelector("app-loading").style.display = "none";
   loopDetectFilterModal();
-  waitForElm("mge-player-video video").then((elem) => {
-    betterVideoPlayer();
-  });
+  loopDetectVideo();
+  autoclickLoadVideoLink();
+
+  function autoclickLoadVideoLink() {
+    waitForElm(
+      "mge-video-comentario > mge-quadro-borda .quadro-collapse.show a"
+    ).then((elem) => {
+      elem.click();
+      console.log("(MGEWeb+) click button created");
+      waitForElmRemoved(
+        "mge-video-comentario > mge-quadro-borda .quadro-collapse.show a"
+      ).then((elem) => {
+        console.log("(MGEWeb+) click button removed");
+        autoclickLoadVideoLink();
+      });
+    });
+  }
+
+  function loopDetectVideo() {
+    waitForElm("mge-player-video video").then((_elem) => {
+      betterVideoPlayer();
+      console.log("(MGEWeb+) mge-player-video created");
+      waitForElmRemoved("mge-player-video").then((_elem) => {
+        console.log("(MGEWeb+) mge-player-video removed");
+        loopDetectVideo();
+      });
+    });
+  }
+
   function loopDetectFilterModal() {
-    waitForElm("modal-container tab[heading=Filtros]").then((elem) => {
+    waitForElm("modal-container tab[heading=Filtros]").then((_elem) => {
       betterFilter();
-      waitForElmRemoved("modal-container").then((elem) => {
+      console.log("(MGEWeb+) filter modal created");
+      waitForElmRemoved("modal-container").then((_elem) => {
         loopDetectFilterModal();
-        if (!document.querySelector("mge-player-video")) {
-          waitForElm("mge-player-video video").then((elem) => {
-            betterVideoPlayer();
-          });
-        }
+        console.log("(MGEWeb+) filter modal removed");
       });
     });
   }
@@ -53,6 +77,9 @@
         document
           .querySelector(".mgeSelect-search__field")
           .dispatchEvent(new Event("input"));
+        document
+          .querySelector(".mgeSelect-search__field")
+          .dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
       });
   }
 
@@ -73,7 +100,7 @@
         return resolve(document.querySelector(selector));
       }
 
-      const observer = new MutationObserver((mutations) => {
+      const observer = new MutationObserver((_mutations) => {
         if (document.querySelector(selector)) {
           observer.disconnect();
           resolve(document.querySelector(selector));
