@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MGEWeb+
 // @namespace    https://mgeweb.medgrupo.com.br/
-// @version      1.0.4
+// @version      1.0.5
 // @description  Melhorias para o MGEWeb
 // @author       Salatiel
 // @match        https://mgeweb.medgrupo.com.br/*
@@ -13,7 +13,10 @@
 (function () {
   "use strict";
 
-  document.querySelector("app-loading").style.display = "none";
+  waitForElm("app-loading").then((e) => {
+    e.style.display = "none";
+  });
+
   loopDetectFilterModal();
   loopDetectVideo();
   autoclickLoadVideoLink();
@@ -92,6 +95,7 @@
       .setAttribute("controls", "");
     document.querySelector("mge-player-video video").style.width = "100%";
     document.querySelector("mge-player-video video").playbackRate = 2.0;
+    document.querySelector("mge-player-video video").defaultPlaybackRate = 2.0;
   }
 
   function waitForElm(selector) {
@@ -107,7 +111,7 @@
         }
       });
 
-      // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+      // parameter 1 is not of type Node https://stackoverflow.com/a/77855838/492336
       observer.observe(document.body, {
         childList: true,
         subtree: true,
