@@ -84,6 +84,10 @@
           .querySelector(".mgeSelect-search__field")
           .dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
       });
+      setTimeout(() => {
+        document.querySelector('#checkQuestaoLiberadaParaVenda input').click()
+        document.querySelector('#checkQuestaoLiberadaParaVenda input').click()
+      }, 200);
   }
 
   function betterVideoPlayer() {
